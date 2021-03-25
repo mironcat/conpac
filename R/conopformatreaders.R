@@ -40,4 +40,4 @@ getCPCHT <- function(filepath=NA,askfile=T,saverawpath=NULL) {
   return(cpcht)
 }
 
-# cpcht<-getCPCHT(filepath=NA,askfile=T)
+cpcht<-getCPCHT(filepath=NA,askfile=T)
