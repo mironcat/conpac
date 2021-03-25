@@ -1,0 +1,9 @@
+Package: conpac
+Type: Package
+Title: Assistant for working with CONOP files
+Version: 0.1.0
+Author: Eugeny Karasev
+Maintainer: The package maintainer <534temp@somewhere.net>
+Description: The package contains functions for reading raw data, as well as calibrating the composite from cpcht.txt using dated markers.
+Encoding: UTF-8
+LazyData: true
