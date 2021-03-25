@@ -36,6 +36,7 @@ getCPCHT <- function(filepath=NA,askfile=T,saverawpath=NULL) {
   bundlename<-getBundleName(con)
   fcpcht<-getFormattedCPCHT(con,saverawpath)
   cpcht<-read.delim(text =fcpcht,sep = '\t',skip=11,header=F, col.names=c('FAD','FAD2','LAD','LAD2','EVENT','PARAMS'))
+  cpcht$EVENT<-trimws(cpcht$EVENT)
   return(cpcht)
 }
 
