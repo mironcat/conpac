@@ -1,6 +1,5 @@
 
 resolveFileConnection<- function(filepath=NA,askfile=F) {
-  con<-'' #file content
   if(askfile){
     filepath <- file.choose() # select file
     if (!exists("filepath")) {
@@ -15,7 +14,10 @@ resolveFileConnection<- function(filepath=NA,askfile=F) {
 }
 
 #get bundle from cpcht
-getBundleName<- function(con) {
+getBundleName<- function(con,filepath=NA) {
+  if (!is.na(filepath)) {
+    con<-resolveFileConnection(filepath)
+  }
   bundle_line <- readLines(con,n=1)
   bundlename  <- trimws(gsub(pattern = '--- (.+) ---', replace = '\\1', x = bundle_line))
   return(bundlename)
@@ -35,9 +37,11 @@ getCPCHT <- function(filepath=NA,askfile=T,saverawpath=NULL) {
   con<-resolveFileConnection(filepath,askfile)
   bundlename<-getBundleName(con)
   fcpcht<-getFormattedCPCHT(con,saverawpath)
-  cpcht<-read.delim(text =fcpcht,sep = '\t',skip=11,header=F, col.names=c('FAD','FAD2','LAD','LAD2','EVENT','PARAMS'))
+  cpcht<-read.delim(text =fcpcht,sep = '\t',skip=10,header=F, col.names=c('FAD','FAD2','LAD','LAD2','EVENT','PARAMS'))
+  cpcht$bundle=bundlename
   cpcht$EVENT<-trimws(cpcht$EVENT)
+  close(con)
   return(cpcht)
 }
 
-cpcht<-getCPCHT(filepath=NA,askfile=T)
+# cpcht<-getCPCHT(filepath=NA,askfile=T)
