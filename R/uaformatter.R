@@ -17,9 +17,9 @@ write.UAoutput <-function(dat, patch) {
 
   ua_ranges<-dat$ranges%>%
     dplyr::inner_join( select(ua_taxa, EVENT, ABBR) , by='EVENT')%>%
-    dplyr::inner_join(sections_levels,by = c('SECTION'='SECTION', 'FAD'='LEVEL'))%>%
+    dplyr::inner_join( dat$sections_levels,by = c('SECTION'='SECTION', 'FAD'='LEVEL'))%>%
     dplyr::rename(UAFAD=UALEVEL)%>%
-    dplyr::inner_join(sections_levels,by = c('SECTION'='SECTION', 'LAD'='LEVEL'))%>%
+    dplyr::inner_join( dat$sections_levels,by = c('SECTION'='SECTION', 'LAD'='LEVEL'))%>%
     dplyr::rename(UALAD=UALEVEL)%>%
     dplyr::select(SECTION, ABBR, UAFAD, UALAD)
 
