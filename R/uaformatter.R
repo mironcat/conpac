@@ -1,6 +1,8 @@
-write.UAoutput <-function(dat) {
+write.UAoutput <-function(dat, patch) {
   # dat - list with
   # dat$ranges
+  # dat$taxa
+  # dat$sections_levels
 
   ua_taxa<-dat$ranges%>%distinct(EVENT)%>%
     dplyr::left_join(dat$taxa%>%dplyr::select(name, ABBR),by = c('EVENT'='name'))%>%
@@ -8,9 +10,7 @@ write.UAoutput <-function(dat) {
     dplyr::select(ABBR, EVENT)
 
   # write taxon dictionary
-  write_delim(ua_taxa, "UAoutput/output.dct",col_names = F,delim = '\t',quote_escape =  "double")
-
-
+  write_delim(ua_taxa, paste0(patch,"output.dct"),col_names = F,delim = '\t',quote_escape =  "double")
 
   sections_info<-dat$sections_levels%>%dplyr::group_by(SECTION)%>%
     dplyr::summarise(bottom= 1,top=max(UALEVEL))
@@ -24,19 +24,20 @@ write.UAoutput <-function(dat) {
     dplyr::select(SECTION, ABBR, UAFAD, UALAD)
 
  # write dat file
-  fileConn <-file("UAoutput/output.dat")
+  output.dat = paste0(patch,"output.dat")
+  fileConn <-file( output.dat )
   fileHeader<-'DATUM\n\nTITLE:\n"RANGE CHART"\n\n'
   writeLines(fileHeader, fileConn)
   close(fileConn)
   for (snum in 1:nrow(sections_info) ) {
     si<-sections_info[snum, ]
-    fileConn <-file("UAoutput/output.dat",open = 'a')
+    fileConn <-file(output.dat,open = 'a')
     writeLines( paste0('\nSECTION ',si$SECTION,'-' ) , fileConn)
     writeLines( paste0('bottom ',si$bottom,' - top ', si$top ) , fileConn)
     close(fileConn)
     taxdat<-dplyr::filter(ua_ranges, SECTION == si$SECTION)%>%
             dplyr::select(ABBR, UAFAD, UALAD)
-    write_delim(taxdat, "UAoutput/output.dat",col_names = F,delim = '\t',quote_escape =  "none",append = T)
+    write_delim(taxdat, output.dat ,col_names = F,delim = '\t',quote_escape =  "none",append = T)
   }
   print("done")
 }
